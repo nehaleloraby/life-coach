@@ -1,9 +1,23 @@
-const express = require('express')
-const app = express()
-const PORT = process.env.PORT || 3000
+import dotenv from 'dotenv'
+dotenv.config()
+import database from './database.js'
+import express from 'express'
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
-  
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+// Routes
+
+database()
+const app = express()
+
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf.toString()
+    },
+    limit: '50mb'
+})
+)
+
+const port = process.env.PORT || 4000
+
+app.listen(port, () => {
+    console.log(`Server runs on port ${port}.`)
+})
