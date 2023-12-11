@@ -4,6 +4,11 @@ import connectToDb from './database.js'
 import videoRoutes from './routes/videoRoutes.js'
 import bookRoutes from './routes/bookRoutes.js'
 import podcastRoutes from './routes/podcastRoutes.js'
+import discoveryRoutes from './routes/discoveryRoutes.js'
+import fullSessRoutes from './routes/fullSessRoutes.js';
+import aboutRoutes from './routes/aboutRoutes.js'
+
+
 dotenv.config()
 
 // Connecting to MongoDB
@@ -15,10 +20,13 @@ const app = express()
 // Parsing json bodies using express.json()
 app.use(express.json())
 
-// Routes for CRUD operations
+// Routes 
 app.use('/videos', videoRoutes)
 app.use('/books', bookRoutes)
 app.use('/podcasts', podcastRoutes)
+app.use('/discovery-calls', discoveryRoutes)
+app.use('/full-sessions', fullSessRoutes)
+app.use('/about', aboutRoutes)
 
 
 const port = process.env.PORT || 4000
