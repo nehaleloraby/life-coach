@@ -1,5 +1,6 @@
 import express from 'express'
 import { Podcast } from '../models/sources.js'
+import verifyAdmin from '../middleware/authMiddleware.js'
 
 const podcastRoutes = express.Router()
 
@@ -13,8 +14,8 @@ podcastRoutes.route('/').get(async (req, res) => {
     }
 })
 
-// Route to add a new podcast
-podcastRoutes.route('/').post(async (req, res) => {
+// Route to add a new podcast - Protected Admin Route
+podcastRoutes.route('/').post(verifyAdmin, async (req, res) => {
     try {
         const newPodcast = new Podcast(req.body)
         await newPodcast.save()
@@ -24,8 +25,8 @@ podcastRoutes.route('/').post(async (req, res) => {
     }
 })
 
-// Route to update a podcast by ID
-podcastRoutes.route('/:id').put(async (req, res) => {
+// Route to update a podcast by ID - Protected Admin Route
+podcastRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     try {
         const updatedPodcast = await Podcast.findByIdAndUpdate(req.params.id, req.body, { new: true })
         if (!updatedPodcast) {
@@ -37,8 +38,8 @@ podcastRoutes.route('/:id').put(async (req, res) => {
     }
 })
 
-// Route to delete a podcast by ID
-podcastRoutes.route('/:id').delete(async (req, res) => {
+// Route to delete a podcast by ID - Protected Admin Route
+podcastRoutes.route('/:id').delete(verifyAdmin, async (req, res) => {
     try {
         const podcast = await Podcast.findByIdAndDelete(req.params.id)
         if (!podcast) {
@@ -51,6 +52,7 @@ podcastRoutes.route('/:id').delete(async (req, res) => {
 })
 
 export default podcastRoutes
+
 
 
 

@@ -1,9 +1,10 @@
 import express from 'express'
 import About from '../models/about.js'
+import verifyAdmin from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-// Route to get "About" page information
+// Route to get "About" page information (Public View)
 router.get('/', async (req, res) => {
     try {
         const aboutInfo = await About.findOne()
@@ -13,8 +14,8 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Route to update "About" page information
-router.put('/', async (req, res) => {
+// Route to update "About" page information (Protected-Admin)
+router.put('/', verifyAdmin, async (req, res) => { 
     try {
         const updatedInfo = await About.findOneAndUpdate({}, req.body, { new: true, upsert: true })
         res.json(updatedInfo)

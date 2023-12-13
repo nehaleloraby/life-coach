@@ -1,5 +1,6 @@
 import express from 'express'
 import { Video } from '../models/sources.js'
+import verifyAdmin from '../middleware/authMiddleware.js'
 
 const videoRoutes = express.Router()
 
@@ -13,8 +14,8 @@ videoRoutes.route('/').get(async (req, res) => {
     }
 })
 
-// Route to add a new video
-videoRoutes.route('/').post(async (req, res) => {
+// Route to add a new video - Protected Admin Route
+videoRoutes.route('/').post(verifyAdmin, async (req, res) => {
     try {
         const newVideo = new Video(req.body)
         await newVideo.save()
@@ -24,8 +25,8 @@ videoRoutes.route('/').post(async (req, res) => {
     }
 })
 
-// Route to update a video
-videoRoutes.route('/:id').put(async (req, res) => {
+// Route to update a video - Protected Admin Route
+videoRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     try {
         const updatedVideo = await Video.findByIdAndUpdate(req.params.id, req.body, { new: true })
         if (!updatedVideo) {
@@ -37,8 +38,8 @@ videoRoutes.route('/:id').put(async (req, res) => {
     }
 })
 
-// Route to delete a video
-videoRoutes.route('/:id').delete(async (req, res) => {
+// Route to delete a video - Protected Admin Route
+videoRoutes.route('/:id').delete(verifyAdmin, async (req, res) => {
     try {
         const video = await Video.findByIdAndDelete(req.params.id)
         if (!video) {

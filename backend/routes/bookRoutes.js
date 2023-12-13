@@ -1,5 +1,7 @@
+
 import express from 'express'
 import { Book } from '../models/sources.js'
+import verifyAdmin from '../middleware/authMiddleware.js'
 
 const bookRoutes = express.Router()
 
@@ -13,8 +15,8 @@ bookRoutes.route('/').get(async (req, res) => {
     }
 })
 
-// Route to add a new book
-bookRoutes.route('/').post(async (req, res) => {
+// Route to add a new book - Protected Admin Route
+bookRoutes.route('/').post(verifyAdmin, async (req, res) => {
     try {
         const newBook = new Book(req.body)
         await newBook.save()
@@ -24,8 +26,8 @@ bookRoutes.route('/').post(async (req, res) => {
     }
 })
 
-// Route to update a book by ID
-bookRoutes.route('/:id').put(async (req, res) => {
+// Route to update a book by ID - Protected Admin Route
+bookRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     try {
         const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true })
         if (!updatedBook) {
@@ -37,8 +39,8 @@ bookRoutes.route('/:id').put(async (req, res) => {
     }
 })
 
-// Route to delete a book by ID
-bookRoutes.route('/:id').delete(async (req, res) => {
+// Route to delete a book by ID - Protected Admin Route
+bookRoutes.route('/:id').delete(verifyAdmin, async (req, res) => {
     try {
         const book = await Book.findByIdAndDelete(req.params.id)
         if (!book) {

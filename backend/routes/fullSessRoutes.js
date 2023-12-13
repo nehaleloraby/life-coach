@@ -1,5 +1,6 @@
 import express from 'express'
 import FullSession from '../models/fullSession.js'
+import verifyAdmin from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
@@ -13,8 +14,8 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Route to create a new full session 
-router.post('/', async (req, res) => {
+// Route to create a new full session - Protected Admin Route
+router.post('/', verifyAdmin, async (req, res) => {
     const fullSession = new FullSession({
         title: req.body.title,
         description: req.body.description,
@@ -54,3 +55,4 @@ router.put('/:id/book', async (req, res) => {
 })
 
 export default router
+
