@@ -50,15 +50,15 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' })
         }
 
-        // Comparing the provided password with the hashed password
+        // Comparing the typed password with the hashed password
         const isPasswordValid = await bcrypt.compare(password, admin.password)
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid credentials' })
         }
 
-        // If credentials are valid, creating and getting the token
-        const token = jwt.sign({ adminId: admin._id }, SECRET_KEY)
+        // If info is valid, creating and getting the token
+        const token = jwt.sign({ adminId: admin._id }, process.env.SECRET_KEY)
         res.json({ message: 'Admin Login successful', token })
     } catch (error) {
         res.status(500).json({ error: 'Error logging in' })

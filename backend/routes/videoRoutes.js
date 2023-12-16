@@ -14,7 +14,7 @@ videoRoutes.route('/').get(async (req, res) => {
     }
 })
 
-// Route to add a new video - Protected Admin Route
+// Route to add a new video (Admin Route)
 videoRoutes.route('/').post(verifyAdmin, async (req, res) => {
     try {
         const newVideo = new Video(req.body)
@@ -25,7 +25,7 @@ videoRoutes.route('/').post(verifyAdmin, async (req, res) => {
     }
 })
 
-// Route to update a video - Protected Admin Route
+// Route to update a video (Admin Route)
 videoRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     try {
         const updatedVideo = await Video.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -38,7 +38,7 @@ videoRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     }
 })
 
-// Route to delete a video - Protected Admin Route
+// Route to delete a video (Admin Route)
 videoRoutes.route('/:id').delete(verifyAdmin, async (req, res) => {
     try {
         const video = await Video.findByIdAndDelete(req.params.id)

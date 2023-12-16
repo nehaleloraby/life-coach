@@ -4,6 +4,28 @@ import verifyAdmin from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
+// Route to create a new full session (Admin)
+router.post('/', verifyAdmin, async (req, res) => {
+    try {
+        const { title, description, duration, price, platform, timezone } = req.body
+
+        const newSession = new FullSession({
+            title,
+            description,
+            duration,
+            price,
+            platform,
+            timezone,
+            availableSlots: [] 
+        })
+
+        await newSession.save()
+        res.status(201).json(newSession)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+})
+
 // Route to get all full sessions
 router.get('/', async (req, res) => {
     try {
@@ -14,45 +36,90 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Route to create a new full session - Protected Admin Route
-router.post('/', verifyAdmin, async (req, res) => {
-    const fullSession = new FullSession({
-        title: req.body.title,
-        description: req.body.description,
-        duration: req.body.duration,
-        price: req.body.price,
-        platform: req.body.platform,
-        timezone: req.body.timezone,
-        availableSlots: req.body.availableSlots
-    })
-
+// Route to get available slots for full sessions
+router.get('/available-slots', async (req, res) => {
     try {
-        const newFullSession = await fullSession.save()
-        res.status(201).json(newFullSession)
+        const { date } = req.query
+        let query = {}
+
+        if (date) {
+            const selectedDate = new Date(date)
+            query['availableSlots.date'] = {
+                $gte: new Date(selectedDate.setHours(0, 0, 0, 0)),
+                $lte: new Date(selectedDate.setHours(23, 59, 59, 999))
+            }
+        }
+
+        const sessions = await FullSession.find(query).where("availableSlots.times.isBooked").equals(false)
+        res.json(sessions)
     } catch (error) {
-        res.status(400).json({ message: error.message })
+        res.status(500).json({ message: error.message })
     }
 })
 
-// Route to book a full session slot
+// Route to book a specific full session slot
 router.put('/:id/book', async (req, res) => {
     try {
-        const { slotIndex, timeIndex, userInfo } = req.body
+        const { slotDate, slotTime, userInfo } = req.body
         const fullSession = await FullSession.findById(req.params.id)
 
         if (!fullSession) {
             return res.status(404).json({ message: 'Full session not found' })
         }
 
-        fullSession.availableSlots[slotIndex].times[timeIndex].isBooked = true
-        fullSession.userInfo = userInfo
+        const slot = fullSession.availableSlots.find(slot => slot.date.toISOString() === slotDate)
+                         .times.find(time => time.time === slotTime)
+
+        if (!slot || slot.isBooked) {
+            return res.status(400).json({ message: 'Slot not available' })
+        }
+
+        slot.isBooked = true
+        slot.userInfo = userInfo
         await fullSession.save()
 
-        res.json(fullSession)
+        res.json({ message: 'Full session booked successfully' })
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
 })
 
+// Admin route to update Full Session content
+router.put('/admin/:id', verifyAdmin, async (req, res) => {
+    const { id } = req.params
+    const { title, price, duration, platform, timezone, description } = req.body.adminContent
+
+    try {
+        const updatedSession = await FullSession.findByIdAndUpdate(
+            id, 
+            { adminContent: { title, price, duration, platform, timezone, description } },
+            { new: true }
+        )
+        res.json(updatedSession)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+})
+
+// Admin route to delete a specific Full Session
+router.delete('/admin/:id', verifyAdmin, async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const result = await FullSession.deleteOne({ _id: id })
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Full session not found' })
+        }
+        res.json({ message: 'Full session deleted successfully' })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
+
 export default router
+
+
+
+
 

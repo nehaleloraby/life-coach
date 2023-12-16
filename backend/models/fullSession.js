@@ -1,52 +1,42 @@
 import mongoose from 'mongoose'
 
 const fullSessionSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    duration: {
-        type: Number, // Duration in minutes
-        required: true
-    },
-    price: {
-        type: Number, // Price of the session
-        required: true
-    },
-    platform: {
-        type: String, // e.g., Google Meet, Zoom
-        required: true
-    },
-    timezone: {
-        type: String, // e.g., Eastern Time - US & Canada
-        required: true
-    },
+    title: String, // Admin edit content
+    description: String, 
+    duration: Number, 
+    price: Number, 
+    platform: String, 
+    timezone: String, 
     availableSlots: [{
-        date: {
-            type: Date,
-            required: true
-        },
+        date: Date,
         times: [{
             time: String,
             isBooked: {
                 type: Boolean,
                 default: false
+            },
+            userInfo: {  // store user information when they book
+                name: String,
+                email: String,
+                phone: String,
+                notes: String
             }
         }]
     }],
-    userInfo: {
-        name: String,
-        email: String,
-        phone: String,
-        notes: String
+    // Admin edit content
+    adminContent: {
+        title: String,
+        description: String,
+        price: Number,
+        duration: Number,
+        platform: String,
+        timezone: String
     }
 })
 
 const FullSession = mongoose.model('FullSession', fullSessionSchema)
 
 export default FullSession
+
+
 

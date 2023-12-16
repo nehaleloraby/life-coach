@@ -14,7 +14,7 @@ podcastRoutes.route('/').get(async (req, res) => {
     }
 })
 
-// Route to add a new podcast - Protected Admin Route
+// Route to add a new podcast (Admin)
 podcastRoutes.route('/').post(verifyAdmin, async (req, res) => {
     try {
         const newPodcast = new Podcast(req.body)
@@ -25,7 +25,7 @@ podcastRoutes.route('/').post(verifyAdmin, async (req, res) => {
     }
 })
 
-// Route to update a podcast by ID - Protected Admin Route
+// Route to update a podcast by ID (Admin) 
 podcastRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     try {
         const updatedPodcast = await Podcast.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -38,7 +38,7 @@ podcastRoutes.route('/:id').put(verifyAdmin, async (req, res) => {
     }
 })
 
-// Route to delete a podcast by ID - Protected Admin Route
+// Route to delete a podcast by ID (Admin)
 podcastRoutes.route('/:id').delete(verifyAdmin, async (req, res) => {
     try {
         const podcast = await Podcast.findByIdAndDelete(req.params.id)

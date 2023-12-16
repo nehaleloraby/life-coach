@@ -7,7 +7,7 @@ import bookRoutes from './routes/bookRoutes.js'
 import podcastRoutes from './routes/podcastRoutes.js'
 import discoveryRoutes from './routes/discoveryRoutes.js'
 import fullSessRoutes from './routes/fullSessRoutes.js'
-import aboutRoutes from './routes/aboutRoutes.js'
+import homePageRoutes from './routes/homePageRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 
 dotenv.config()
@@ -25,12 +25,12 @@ app.use(express.json())
 app.use(cors())
 
 // Routes 
+app.use('/', homePageRoutes)
 app.use('/videos', videoRoutes)
 app.use('/books', bookRoutes)
 app.use('/podcasts', podcastRoutes)
 app.use('/discovery-calls', discoveryRoutes)
 app.use('/full-sessions', fullSessRoutes)
-app.use('/about', aboutRoutes)
 app.use('/admin', adminRoutes)
 
 
