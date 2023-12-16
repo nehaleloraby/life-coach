@@ -20,7 +20,8 @@ Ability for site visitors to view blog posts and resources
 Ability for users to book appointments with the life coach
 
 ### Deployment 
-
+Netlify (Frontend): 
+Heroku (Backend): https://freespiritedlatina-3a9b1721dfc3.herokuapp.com/
 
 ### Access code here:
 -Frontend:
