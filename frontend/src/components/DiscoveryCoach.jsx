@@ -14,7 +14,7 @@ const DiscoveryCoach = () => {
     useEffect(() => {
         const fetchAdminContent = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/discovery-calls/admin-content')
+                const response = await axios.get('https://freespiritedlatina-3a9b1721dfc3.herokuapp.com/discovery-calls/admin-content')
                 setAdminContent(response.data)
             } catch (error) {
                 console.error('Error fetching admin content for discovery calls', error)

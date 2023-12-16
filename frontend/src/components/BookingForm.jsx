@@ -13,7 +13,7 @@ const BookingForm = ({ date, time, type }) => {
         const userInfo = { email, name, phone, notes }
         
        
-        axios.post(`http://localhost:4000/${type}/book`, {
+        axios.post(`https://freespiritedlatina-3a9b1721dfc3.herokuapp.com/${type}/book`, {
             date: date.toISOString(),
             time,
             userInfo

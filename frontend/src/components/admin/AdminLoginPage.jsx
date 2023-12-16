@@ -12,7 +12,7 @@ const AdminLoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.post('http://localhost:4000/admin/login', { username, password })
+            const response = await axios.post('https://freespiritedlatina-3a9b1721dfc3.herokuapp.com/admin/login', { username, password })
             console.log(response.data)
             localStorage.setItem('adminToken', response.data.token)
             navigate('/admin/dashboard')
